@@ -1,6 +1,22 @@
 var express     = require("express"),
     bodyParser  = require('body-parser');
 
+var mongoose = require('mongoose');
+mongoose.connect('mongodb://192.168.19.172:27017/ubt', {}, function (err, res) {
+    if (err) { 
+        console.log('Connection refused to mongodb://192.168.19.172:27017/ubt');
+        console.log(err);
+    } else {
+        console.log('Connection successful to: mongodb://192.168.19.172:27017/ubt');
+    }
+});
+var Schema = mongoose.Schema;
+var PV = new Schema({ 
+    pv: Schema.Types.Mixed 
+});
+var pvModel   = mongoose.model('PV', PV);
+
+
 var app = express();
 
 app.use(bodyParser.json({limit: '10mb'}));
@@ -33,8 +49,15 @@ app.get("/ubt/pv.gif", function(req, res) {
         }
         console.log(decodeURIComponent(queryStr));
         var pvData = JSON.parse(decodeURIComponent(queryStr));
-        console.log(pvData);
-        return res.sendStatus(200);
+        var pv = new pvModel();
+        pv.pv=pvData;
+        pv.save(function(err) {
+          if (err) {
+            console.log(err);
+            return res.sendStatus(500);
+          } 
+          return res.sendStatus(200);
+        });
     } catch (e) {
     	console.log(e)
         return res.sendStatus(500);
