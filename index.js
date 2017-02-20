@@ -1,0 +1,47 @@
+var express     = require("express"),
+    bodyParser  = require('body-parser');
+
+var app = express();
+
+app.use(bodyParser.json({limit: '10mb'}));
+app.use(bodyParser.urlencoded({ extended: true,limit: '10mb', parameterLimit:50 }));
+
+
+app.all('*',function (req, res, next) {
+  res.header('Access-Control-Allow-Origin', '*');
+  res.header('Access-Control-Allow-Headers', 'Content-Type, Content-Length, Authorization, Accept, X-Requested-With');
+  res.header('Access-Control-Allow-Methods', 'PUT, POST, GET, DELETE, OPTIONS');
+
+  if (req.method == 'OPTIONS') {
+    res.sendStatus(200);
+  }
+  else {
+    next();
+  }
+});
+
+app.get("/healthcheck", function(req,res){
+  res.sendStatus(200);
+});
+
+app.get("/ubt/pv.gif", function(req, res) {
+    try {
+        var queryStr=require('url').parse(req.url).query || '';
+
+        if (queryStr == '') {
+            return res.sendStatus(400);
+        }
+        console.log(decodeURIComponent(queryStr));
+        var pvData = JSON.parse(decodeURIComponent(queryStr));
+        console.log(pvData);
+        return res.sendStatus(200);
+    } catch (e) {
+    	console.log(e)
+        return res.sendStatus(500);
+    }
+});
+
+var port = process.env.NODE_PORT || 7033;
+app.listen(port, function() {
+	console.log("Listening on " + port);
+});
