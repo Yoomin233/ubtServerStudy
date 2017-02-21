@@ -14,8 +14,12 @@ var Schema = mongoose.Schema;
 var PV = new Schema({ 
   pv: Schema.Types.Mixed 
 });
-var pvModel   = mongoose.model('PV', PV);
+var pvModel = mongoose.model('PV', PV);
 
+var TestData = new Schema({ 
+  num: Number
+});
+var testModel = mongoose.model('TestData', TestData);
 
 var app = express();
 app.use(bodyParser.json({limit: '10mb'}));
@@ -37,6 +41,28 @@ app.all('*',function (req, res, next) {
 
 app.get("/healthcheck", function(req,res){
   res.sendStatus(200);
+});
+
+app.get("/error", function(req,res){
+  var update = { $inc: { num: 1 }};
+
+  testModel.update({}, update, {safe: true, upsert: true}, function(err, doc){
+    if (err) {
+      console.log(err);
+      return res.sendStatus(500);
+    } 
+    return res.sendStatus(200);
+  }); 
+});
+
+app.get("/point", function(req,res){
+  testModel.findOne({}, function (err, doc) {
+    if (err) {
+      console.log(err);
+      return res.sendStatus(500);
+    } 
+    return res.json(doc);
+  });
 });
 
 app.get("/ubt/pv.gif", function(req, res) {
