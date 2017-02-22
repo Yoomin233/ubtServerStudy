@@ -88,7 +88,7 @@ app.get("/ubt/pv.gif", function(req, res) {
   }
 });
 
-var port = process.env.NODE_PORT || 7033;
+var port = process.env.NODE_PORT || 8080;
 app.listen(port, function() {
 	console.log("Listening on " + port);
 });
