@@ -1,14 +1,14 @@
 var express     = require("express"),
     bodyParser  = require('body-parser');
-
+var config = require('./config/index.js');
 var mongoose = require('mongoose');
-mongoose.connect('mongodb://192.168.19.172:27017/ubt', {}, function (err, res) {
-  if (err) { 
-      console.log('Connection refused to mongodb://192.168.19.172:27017/ubt');
-      console.log(err);
-  } else {
-      console.log('Connection successful to: mongodb://192.168.19.172:27017/ubt');
-  }
+mongoose.connect(config.db, {}, function (err, res) {
+    if (err) { 
+        console.log('Connection refused to ' + config.db);
+        console.log(err);
+    } else {
+        console.log('Connection successful to: ' + config.db);
+    }
 });
 var Schema = mongoose.Schema;
 var PV = new Schema({ 
