@@ -1,30 +1,16 @@
 var express     = require("express"),
     bodyParser  = require('body-parser');
 var config = require('./config/index.js');
-var mongoose = require('mongoose');
-mongoose.connect(config.db, {}, function (err, res) {
-    if (err) { 
-        console.log('Connection refused to ' + config.db);
-        console.log(err);
-    } else {
-        console.log('Connection successful to: ' + config.db);
-    }
-});
-var Schema = mongoose.Schema;
-var PV = new Schema({ 
-  pv: Schema.Types.Mixed 
-});
-var pvModel = mongoose.model('PV', PV);
+var db = require('./db/mongodb.js');
+var testModel = require('./db/testdata.model.js');
+var pvModel = require('./db/pv.model.js');
+var errorreport = require('./modules/errorreport.js');
 
-var TestData = new Schema({ 
-  num: Number
-});
-var testModel = mongoose.model('TestData', TestData);
+db.init();
 
 var app = express();
 app.use(bodyParser.json({limit: '10mb'}));
 app.use(bodyParser.urlencoded({ extended: true,limit: '10mb', parameterLimit:50 }));
-
 
 app.all('*',function (req, res, next) {
   res.header('Access-Control-Allow-Origin', '*');
@@ -44,19 +30,14 @@ app.get("/healthcheck", function(req,res){
 });
 
 app.get("/error", function(req,res){
-  var update = { $inc: { num: 1 }};
-
-  testModel.update({}, update, {safe: true, upsert: true}, function(err, doc){
-    if (err) {
-      console.log(err);
-      return res.sendStatus(500);
-    } 
-    return res.sendStatus(200);
-  }); 
+  errorreport.increaseErrorSample();
+  return res.sendStatus(200);
 });
 
+app.get("/report", errorreport.aggregate);
+
 app.get("/point", function(req,res){
-  testModel.findOne({}, function (err, doc) {
+  testModel.testModel.findOne({}, function (err, doc) {
     if (err) {
       console.log(err);
       return res.sendStatus(500);
