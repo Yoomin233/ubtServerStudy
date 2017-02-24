@@ -5,6 +5,7 @@ var db = require('./db/mongodb.js');
 var testModel = require('./db/testdata.model.js');
 var pvModel = require('./db/pv.model.js');
 var errorreport = require('./modules/errorreport.js');
+var reportaggregate = require('./modules/report.aggregate.js');
 
 db.init();
 
@@ -34,7 +35,7 @@ app.get("/error", function(req,res){
   return res.sendStatus(200);
 });
 
-app.get("/report", errorreport.aggregate);
+app.get("/report", reportaggregate.aggregate);
 
 app.get("/point", function(req,res){
   testModel.testModel.findOne({}, function (err, doc) {
