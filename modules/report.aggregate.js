@@ -6,10 +6,10 @@ exports.aggregate =function(req,res){
 		"type":"ERROR"
 	};
     var queryStr=require('url').parse(req.url).query || '';
-    if (queryStr == '') {
-        return res.sendStatus(400);
+    var params={};
+    if (queryStr != '') {
+        params = JSON.parse(decodeURIComponent(queryStr));
     }
-    var params = JSON.parse(decodeURIComponent(queryStr));
     var aggParams=Object.assign({},initParams,params);
 
 	var queryStart=new Date();
