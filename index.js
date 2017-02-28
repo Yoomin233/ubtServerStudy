@@ -55,7 +55,7 @@ app.get("/ubt/pv.gif", function(req, res) {
     }
     console.log(decodeURIComponent(queryStr));
     var pvData = JSON.parse(decodeURIComponent(queryStr));
-    var pv = new pvModel();
+    var pv = new pvModel.pvModel();
     pv.pv=pvData;
     pv.save(function(err) {
       if (err) {
