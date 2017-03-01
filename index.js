@@ -26,13 +26,19 @@ app.all('*',function (req, res, next) {
   }
 });
 
-app.get("/healthcheck", function(req,res){
-  res.sendStatus(200);
-});
-
+// ====== Test purpose API ========
 app.get("/error", function(req,res){
   errorreport.increaseErrorSample();
   return res.sendStatus(200);
+});
+app.get("/push", function(req,res){
+  require('./modules/push.js').push("hi hi hi!!!");
+  return res.sendStatus(200);
+});
+// ====== End Test ========
+
+app.get("/healthcheck", function(req,res){
+  res.sendStatus(200);
 });
 
 app.get("/report", reportaggregate.aggregate);
