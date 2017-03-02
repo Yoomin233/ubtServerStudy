@@ -7,6 +7,7 @@ var pvModel = require('./db/pv.model.js');
 var {ErrorModel} = require('./db/error.model.js')
 var errorreport = require('./modules/errorreport.js');
 var reportaggregate = require('./modules/report.aggregate.js');
+var configAPI = require('./modules/config.js');
 
 db.init();
 
@@ -44,15 +45,8 @@ app.get("/healthcheck", function(req,res){
 
 app.get("/report", reportaggregate.aggregate);
 
-app.get("/point", function(req,res){
-  testModel.testModel.findOne({}, function (err, doc) {
-    if (err) {
-      console.log(err);
-      return res.sendStatus(500);
-    } 
-    return res.json(doc);
-  });
-});
+app.get("/config/q", configAPI.q);
+app.post("/config/update", configAPI.update);
 
 app.get('/error', (req, res) => {
   if (!req.query.data) {
