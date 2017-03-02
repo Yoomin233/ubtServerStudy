@@ -7,7 +7,7 @@ var request = require('request');
 var AppKey = '98af1bff0dcfdf220b9dc8a7';
 var MasterSecret = process.env.JIGUANG_MasterSecret;
 var auth = 'Basic ' + new Buffer(AppKey + ':' + MasterSecret).toString('base64');
-
+console.log(auth)
 exports.push=function(msg){
 	var _msg=msg;
 	var options = {
