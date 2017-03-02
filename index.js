@@ -4,6 +4,7 @@ var config = require('./config/index.js');
 var db = require('./db/mongodb.js');
 var testModel = require('./db/testdata.model.js');
 var pvModel = require('./db/pv.model.js');
+var {ErrorModel} = require('./db/error.model.js')
 var errorreport = require('./modules/errorreport.js');
 var reportaggregate = require('./modules/report.aggregate.js');
 
@@ -27,7 +28,7 @@ app.all('*',function (req, res, next) {
 });
 
 // ====== Test purpose API ========
-app.get("/error", function(req,res){
+app.get("/errorTest", function(req,res){
   errorreport.increaseErrorSample();
   return res.sendStatus(200);
 });
@@ -52,6 +53,24 @@ app.get("/point", function(req,res){
     return res.json(doc);
   });
 });
+
+app.get('/error', (req, res) => {
+  if (!req.query.data) {
+    return res.sendStatus(400);
+  }
+  var errorInfo = JSON.parse(req.query.data);
+  // report Errors 数加1
+  errorreport.increaseErrorSample();
+  // 增加PV error记录
+  var docum = new ErrorModel(errorInfo);
+  docum.save((err,doc) => {
+    if (err) {
+      console.log(err);
+      return res.sendStatus(500);
+    }
+    return res.json(doc);
+  });
+})
 
 app.get("/ubt/pv.gif", function(req, res) {
   try {
