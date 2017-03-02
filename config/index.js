@@ -5,6 +5,7 @@ var extend = require('util')._extend;
 
 var priAli = require('./env/private.js');
 var test = require('./env/test.js');
+var pro = require('./env/pro.js');
 
 var notifier = {
 };
@@ -16,5 +17,6 @@ var defaults = {
 
 module.exports = {
   priAli: extend(priAli, defaults),
-  test: extend(test, defaults)
+  test: extend(test, defaults),
+  production: extend(pro, defaults)
 }[process.env.NODE_ENV || 'test'];
