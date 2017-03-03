@@ -50,7 +50,8 @@ app.post("/config/update", configAPI.update);
 
 app.get('/error', (req, res) => {
   if (!req.query.data) {
-    return res.sendStatus(400);
+    // return res.sendStatus(400);
+    return res.send('error data is needed');
   }
   var errorInfo = JSON.parse(req.query.data);
   // report Errors 数加1

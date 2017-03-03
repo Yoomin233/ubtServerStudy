@@ -8,5 +8,5 @@ var ErrorsSchema = mongoose.Schema({
 })
 
 module.exports = {
-  Zqmodel: mongoose.model('Errors', ErrorsSchema)
+  ErrorModel: mongoose.model('Errors', ErrorsSchema)
 }

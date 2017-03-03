@@ -5,12 +5,8 @@ exports.aggregate =function(req,res){
 		"period":"day",
 		"type":"ERROR"
 	};
-    var queryStr=require('url').parse(req.url).query || '';
-    var params={};
-    if (queryStr != '') {
-        params = JSON.parse(decodeURIComponent(queryStr));
-    }
-    var aggParams=Object.assign({},initParams,params);
+  var params=require('url').parse(decodeURIComponent(req.url),true).query;
+  var aggParams=Object.assign({},initParams,params);
 
 	var queryStart=new Date();
 	if (aggParams.period=='hour') {
