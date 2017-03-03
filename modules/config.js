@@ -1,5 +1,15 @@
 var db = require('../db/config.model.js');
 
+function _callback(res){
+	var _res = res;
+	return function(err, doc){
+		if (err) {
+		  return _res.sendStatus(500);
+		}
+		_res.json(doc);
+	}
+}
+
 exports.update = function(req, res) {
 	var doc = req.body||'';
 	if (doc == '') {
@@ -15,12 +25,7 @@ exports.update = function(req, res) {
 		  }, 
 		  doc, 
 		  {safe: true, upsert: true},
-		  function (err, doc){
-				if (err) {
-				  return res.sendStatus(500);
-				}
-				res.json(doc);
-			}
+		  _callback(res)
 	  	);
 	}else{
 		return res.sendStatus(400);
@@ -28,20 +33,10 @@ exports.update = function(req, res) {
 }
 
 exports.q = function(req, res) {
-	var queryStr=require('url').parse(req.url).query || '';
-	if (queryStr == '') {
-		return res.sendStatus(400);
-	}
-
-    var key = JSON.parse(decodeURIComponent(queryStr)).key || '';
+    var key = req.params.configKey || '';
 
 	if (key != '') {
-		db.configModel.findOne({"key":key},function (err, doc){
-				if (err) {
-				  return res.sendStatus(500);
-				}
-				res.json(doc);
-			});
+		db.configModel.findOne({"key":key},_callback(res));
 	}else{
 		return res.sendStatus(400);
 	}

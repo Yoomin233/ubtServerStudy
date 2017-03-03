@@ -45,7 +45,7 @@ app.get("/healthcheck", function(req,res){
 
 app.get("/report", reportaggregate.aggregate);
 
-app.get("/config/q", configAPI.q);
+app.get("/config/q/:configKey", configAPI.q);
 app.post("/config/update", configAPI.update);
 
 app.get('/error', (req, res) => {

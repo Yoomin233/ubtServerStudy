@@ -39,7 +39,6 @@ exports.aggregate =function(req,res){
 			}
 	}
 	aggParams._queryStart=queryStart;
-	console.log(aggParams);
 
     db.counterReport.aggregate([
 		    {		
