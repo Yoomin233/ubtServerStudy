@@ -1,16 +1,22 @@
-db.getCollection('counterreports').find({})
-
+// 实时计数类统计
 db.getCollection('counterreports').aggregate(
 [
+{
+    $project: { 
+        "total_nums":1,
+        "type":1,
+        "timestamp_minute": { $add: [ "$timestamp_minute", 8*60*60000 ] }
+    }
+},
 { 
     $match: {
         "type":"ERROR",
+        "timestamp_minute": {"$gte":ISODate("2017-02-27T10:12:00.000Z")}
     } 
 },
 { 
     $group : {
-        _id : { 
-            hour: { $hour: "$timestamp_minute" },
+        _id : {
             day: { $dayOfMonth: "$timestamp_minute" }, 
             month: { $month: "$timestamp_minute" },  
             year: { $year: "$timestamp_minute" } 
@@ -20,4 +26,3 @@ db.getCollection('counterreports').aggregate(
 },
 { $sort: { _id: -1 } }
 ])
-
