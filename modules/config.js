@@ -1,4 +1,4 @@
-var db = require('../db/config.model.js');
+var db = require('../db/model.js');
 
 function _callback(res){
 	var _res = res;
@@ -19,7 +19,7 @@ exports.update = function(req, res) {
 	var key = req.body.key || '';
 
 	if (key != '') {
-		db.configModel.update(
+		db.ConfigModel.update(
 		  { 
 		    "key": key
 		  }, 
@@ -36,7 +36,7 @@ exports.q = function(req, res) {
     var key = req.params.configKey || '';
 
 	if (key != '') {
-		db.configModel.findOne({"key":key},_callback(res));
+		db.ConfigModel.findOne({"key":key},_callback(res));
 	}else{
 		return res.sendStatus(400);
 	}

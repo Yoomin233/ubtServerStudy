@@ -1,10 +1,10 @@
-var db = require('../db/report.model.js');
+var db = require('../db/model.js');
 
 exports.increaseErrorSample = function(){
 	var d=new Date();
 	var dMinute=new Date(d.getFullYear(), d.getMonth(), d.getDate(), d.getHours(), d.getMinutes(), 0);
 
-	db.counterReport.update(
+	db.CounterModel.update(
 	  { 
 	    timestamp_minute: dMinute,
 	    type: "ERROR"

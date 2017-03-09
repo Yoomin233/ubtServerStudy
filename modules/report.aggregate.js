@@ -1,4 +1,4 @@
-var db = require('../db/report.model.js');
+var db = require('../db/model.js');
 
 exports.aggregate =function(req,res){
 	var initParams={
@@ -36,7 +36,7 @@ exports.aggregate =function(req,res){
 	}
 	aggParams._queryStart=queryStart;
 
-    db.counterReport.aggregate([
+    db.CounterModel.aggregate([
 		    {		
 			    $project: { 
 			        "total_nums":1,
