@@ -9,6 +9,8 @@ var ConfigSchema = new Schema({
 var ConfigModel = mongoose.model('Config', ConfigSchema);
 
 var TraceSchema = new Schema({
+  pvId: { type: String, default: ''},
+  appName: { type: String, default: 'DX'},
   time: { type: Date, required: true},
   level: ['FATAL','ERROR','WARN','INFO','DEBUG'],
   msg: { type: String, default: ''},
