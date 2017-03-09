@@ -48,7 +48,7 @@ app.post("/config/update", configAPI.update);
 app.get('/error', trace.traceError);
 app.get("/ubt/pv.gif", pv.save);
 
-var port = process.env.NODE_PORT || 7888;
+var port = process.env.NODE_PORT || 8080;
 app.listen(port, function() {
 	console.log("Listening on " + port);
 });
