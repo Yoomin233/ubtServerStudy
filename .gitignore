@@ -4,3 +4,4 @@ npm-debug.log
 logs/
 sslcert/
 stur.mk
+coverage/
