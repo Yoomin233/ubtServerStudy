@@ -27,10 +27,10 @@ var PVSchema = new Schema({
 		state:['PENDING','FINISH','TIMEOUT']
 	},
 	static: {
-		pvId:{ type: String, default: ''},
+		pvId:{ type: String, default: ''},//格式：platform-appName-appVersion-window.location.pathname-title-custom
 		uid:{ type: String, default: ''},
-		prePv:{ 
-			pvId:{ type: String, default: ''} //格式：platform-appName-appVersion-window.location.pathname-title-custom
+		prePV:{ 
+			pvId:{ type: String, default: ''} 
 		},
 		deviseId:{ type: String, default: ''},
 		client:{ 
@@ -52,7 +52,7 @@ var PVSchema = new Schema({
 		performance: {type: Schema.Types.Mixed},
 		clickLog:[],  //click元素
 		inputInfo:[], //页面input, select元素的值（onblur, onchange event）
-		endTime: { type: Date, required: true},
+		unloadTime: { type: Date},
 		custom: { type: Schema.Types.Mixed}
 	}
 });
