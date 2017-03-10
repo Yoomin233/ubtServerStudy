@@ -1,4 +1,5 @@
 var db = require('../db/model.js');
+var errorreport = require('./errorreport')
 
 exports.traceError = function(req, res) {
   if (!req.query.data) {
