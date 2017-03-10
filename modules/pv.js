@@ -1,11 +1,11 @@
 var db = require('../db/model.js');
 
 function _pvValidate(pv){
-  if (!pvData.dynamic || !pvData.static) {
+  if (!pv.dynamic || !pv.static) {
     return false;
   }
 
-  if (!pvData.dynamic.pvState) {
+  if (!pv.dynamic.pvState) {
     return false;
   }
 
