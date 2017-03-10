@@ -1,6 +1,14 @@
 var db = require('../db/model.js');
 
 function _pvValidate(pv){
+  if (!pvData.dynamic || !pvData.static) {
+    return false;
+  }
+
+  if (!pvData.dynamic.pvState) {
+    return false;
+  }
+
   return true;
 }
 
@@ -40,7 +48,10 @@ exports.save = function(req, res) {
           return res.sendStatus(200);
         });
       }else{ // Update pv
-          console.log("update pv");
+          if (pvDoc.meta.state=="FINISH"||pvDoc.meta.state=="TIMEOUT") {
+            return res.sendStatus(400);
+          }
+
           var _dynamic={};
           _dynamic.preformance=Object.assign({},pvDoc.dynamic.performance,pvData.dynamic.performance);
           _dynamic.custom=Object.assign({},pvDoc.dynamic.custom,pvData.dynamic.custom);
@@ -50,19 +61,19 @@ exports.save = function(req, res) {
           var _inputInfo=pvData.dynamic.inputInfo||[];
           _dynamic.clickLog=pvDoc.dynamic.clickLog.concat(_clickLog);
           _dynamic.inputInfo=pvDoc.dynamic.inputInfo.concat(_inputInfo);
-          _metaState=pvDoc.meta.state;
+
+          var _meta=pvDoc.meta;
 
           if (pvData.dynamic.pvState=="FINISH") {
             var d=new Date();
             d.setTime(pvData.dynamic.unloadTime);
             _dynamic.unloadTime=d;
-
-            _metaState="FINISH";
+            _meta.state="FINISH";
           }
-          console.log(_dynamic);
 
           db.PVModel.update(q, {
-            dynamic:_dynamic
+            dynamic:_dynamic,
+            meta:_meta
           }, {safe: true}, function(err, doc){
             if (err) {
               console.log(err);

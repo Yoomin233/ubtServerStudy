@@ -48,7 +48,8 @@ function randomPV(){
 	var http = require('http');
 	var querystring = require("querystring");
 	var queryStr=encodeURIComponent(JSON.stringify(mockPV));
-	var url="http://localhost:8080/ubt/pv.gif?"+queryStr;
+	//var url="http://localhost:8080/ubt/pv.gif?"+queryStr;
+	var url="http://192.168.19.172:8080/ubt/pv.gif?"+queryStr;
 
 	var req = http.get(url, function(res) {
 	  var bodyChunks = [];
