@@ -51,7 +51,26 @@ var PVSchema = new Schema({
 		title:{ type: String, default: ''}
 	},
 	dynamic: {
-		performance: {type: Schema.Types.Mixed,default:{}},
+		performanceTiming: {
+      readyStart: { type: Number }, //上个页面unload到浏览器开始处理当前页面fetchStart的耗时
+      redirecTime: { type: Number }, //重定向耗时
+      appcacheTime: { type: Number }, //fetchStart到domainLookupStart的耗时
+      lookupDomainTime: { type: Number }, //DNS查询耗时
+      connectTime: { type: Number }, // TCP连接耗时
+      requestTime: { type: Number }, //第一个request的耗时
+      initDomTreeTime: { type: Number }, //请求完毕至dom加载
+      domReadyTime: { type: Number }, //解析dom树耗时
+      loadEventTime: { type: Number }, //loadEventEnd - loadEventStart
+      totalTime: { type: Number} //loadEventEnd - fetchStart
+    },
+    performanceEntries: [
+      {
+        name: { type: String }, //resource的文件url
+        minDuration: { type: Number }, //resource的耗时的最大值和最小值（用于多次请求）
+        maxDuration: { type: Number },
+        totalNum: { type: Number, default: 1 }, //相同的resource请求的次数
+      }
+    ],
 		clickLog:[],  //click元素
 		inputInfo:[], //页面input, select元素的值（onblur, onchange event）
 		unloadTime: { type: Date, default: new Date()},
