@@ -2,14 +2,14 @@
 db.getCollection('pvs').aggregate([
 {
     $project: { 
-        "pvId":1
-        "visitTime": { $add: [ "$visitTime", 8*60*60000 ] }
+        "static":1,
+        "visitTime": { $add: [ "$static.visitTime", 8*60*60000 ] }
     }
 },
 { 
     $match: {
-        "pvId":"xxx",
-        "visitTime":{"$gte":ISODate("2017-02-1T10:12:00.000Z"),"$lt":ISODate("2017-02-27T10:12:00.000Z")}
+        "static.pvId":"h5-DX-1.0.0-/-UBT - demo-",
+        "visitTime":{"$gte":new Date(2017,1,17),"$lt":new Date(2017,10,17)}
     } 
 },
 { 
