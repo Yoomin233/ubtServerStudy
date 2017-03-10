@@ -7,12 +7,11 @@ var moment  = require('moment');
 function randomPV(){
 	var sHour=chance.integer({min: 1, max: 10});
 	var randomTimestamp=moment().subtract(sHour,'hours').valueOf();
-	var visitTime = new Date();
+	var visitTime = new Date(2017,3,10,9);
 
 	var mockPV={
 		meta:{
-		  	version:"0.0.1",
-		  	state:'FINISH'
+		  	version:"0.0.1"
 		},
 		static: {
 			pvId:"h5-liveroom-1.0.0-abc/123-直播室-room1", //格式：platform-appName-appVersion-window.location.pathname-title-custom
@@ -20,7 +19,7 @@ function randomPV(){
 			prePv:{ 
 				pvId:""
 			},
-			deviseId:"2389794615",
+			deviceId:"123",
 			client:{ 
 				platform:"H5",
 				version:"1.0.0"
@@ -35,7 +34,12 @@ function randomPV(){
 			title:"直播室"
 		},
 		dynamic: {
-			endTime: visitTime
+			pvState:"FINISH",
+			unloadTime:visitTime.getTime(),
+			clickLog:[{"id":"abc"}],
+			performance:{
+				startTime:visitTime
+			}
 		}
 	};
 

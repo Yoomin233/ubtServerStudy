@@ -34,7 +34,7 @@ var PVSchema = new Schema({
 		prePV:{ 
 			pvId:{ type: String, default: ''} 
 		},
-		deviseId:{ type: String, default: ''},
+		deviceId:{ type: String, default: ''},
 		client:{ 
 			platform:['H5','ANDROID','IOS','WEICHAT','RN','HYBRID'],
 			version:{ type: String, default: ''}
@@ -51,13 +51,14 @@ var PVSchema = new Schema({
 		title:{ type: String, default: ''}
 	},
 	dynamic: {
-		performance: {type: Schema.Types.Mixed},
+		performance: {type: Schema.Types.Mixed,default:{}},
 		clickLog:[],  //click元素
 		inputInfo:[], //页面input, select元素的值（onblur, onchange event）
-		unloadTime: { type: Date},
-		pvState:{ type: String, default: ''},
-		custom: { type: Schema.Types.Mixed}
-	}
+		unloadTime: { type: Date, default: new Date()},
+		pvState:{ type: String, required: true},
+		custom: { type: Schema.Types.Mixed,default:{}}
+	},
+	_id:{ type: String} //pvId+visitTime+deviceId+uid
 });
 PVSchema.plugin(timestamps);
 var PVModel = mongoose.model('PV', PVSchema);
