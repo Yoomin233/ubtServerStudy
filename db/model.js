@@ -15,43 +15,43 @@ var TraceSchema = new Schema({
   level: ['FATAL','ERROR','WARN','INFO','DEBUG'],
   msg: { type: String, default: ''},
   error: {
-  	errorMessage: { type: String, default: ''},
-  	scriptURI: { type: String, default: ''},
-  	lineNumber: { type: Number, default: -1},
-  	errorObj: { type: Schema.Types.Mixed},
+    errorMessage: { type: String, default: ''},
+    scriptURI: { type: String, default: ''},
+    lineNumber: { type: Number, default: -1},
+    errorObj: { type: Schema.Types.Mixed},
   }
 });
 var TraceModel = mongoose.model('Trace', TraceSchema);
 
 var PVSchema = new Schema({
-	meta: {
-		version:{ type: String, default: ''},
-		state:['PENDING','FINISH','TIMEOUT']
-	},
-	static: {
-		pvId:{ type: String, default: ''},//格式：platform-appName-appVersion-window.location.pathname-title-custom
-		uid:{ type: String, default: ''},
-		prePV:{ 
-			pvId:{ type: String, default: ''} 
-		},
-		deviceId:{ type: String, default: ''},
-		client:{ 
-			platform:['H5','ANDROID','IOS','WEICHAT','RN','HYBRID'],
-			version:{ type: String, default: ''}
-		},
-		appName:{ type: String, default: 'DX'},
-		visitTime: { type: Date, required: true},
-		geolocation: {
-			latitude: { type: Number}, 
-			longitude: { type: Number}
-		}, 
-		href:{ type: String, default: ''},
-		referrer:{ type: String, default: ''},
-		userAgent: { type: Schema.Types.Mixed},
-		title:{ type: String, default: ''}
-	},
-	dynamic: {
-		performanceTiming: {
+  meta: {
+    version:{ type: String, default: ''},
+    state:['PENDING','FINISH','TIMEOUT']
+  },
+  static: {
+    pvId:{ type: String, default: ''},//格式：platform-appName-appVersion-window.location.pathname-title-custom
+    uid:{ type: String, default: ''},
+    prePV:{
+      pvId:{ type: String, default: ''}
+    },
+    deviceId:{ type: String, default: ''},
+    client:{
+      platform:['H5','ANDROID','IOS','WEICHAT','RN','HYBRID'],
+      version:{ type: String, default: ''}
+    },
+    appName:{ type: String, default: 'DX'},
+    visitTime: { type: Date, required: true},
+    geolocation: {
+      latitude: { type: Number},
+      longitude: { type: Number}
+    },
+    href:{ type: String, default: ''},
+    referrer:{ type: String, default: ''},
+    userAgent: { type: Schema.Types.Mixed},
+    title:{ type: String, default: ''}
+  },
+  dynamic: {
+    performanceTiming: {
       readyStart: { type: Number }, //上个页面unload到浏览器开始处理当前页面fetchStart的耗时
       redirecTime: { type: Number }, //重定向耗时
       appcacheTime: { type: Number }, //fetchStart到domainLookupStart的耗时
@@ -71,13 +71,13 @@ var PVSchema = new Schema({
         totalNum: { type: Number, default: 1 }, //相同的resource请求的次数
       }
     ],
-		clickLog:[],  //click元素
-		inputInfo:[], //页面input, select元素的值（onblur, onchange event）
-		unloadTime: { type: Date, default: new Date()},
-		pvState:{ type: String, required: true},
-		custom: { type: Schema.Types.Mixed,default:{}}
-	},
-	_id:{ type: String} //pvId+visitTime+deviceId+uid
+    clickLog:[],  //click元素
+    inputInfo:[], //页面input, select元素的值（onblur, onchange event）
+    unloadTime: { type: Date, default: new Date()},
+    pvState:{ type: String, required: true},
+    custom: { type: Schema.Types.Mixed,default:{}}
+  },
+  _id:{ type: String} //pvId+visitTime+deviceId+uid
 });
 PVSchema.plugin(timestamps);
 var PVModel = mongoose.model('PV', PVSchema);
