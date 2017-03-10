@@ -64,6 +64,7 @@ var PVSchema = new Schema({
       totalTime: { type: Number} //loadEventEnd - fetchStart
     },
     performanceEntries: [
+      // 客户端对entry不做过滤，会把每个entry发过来(字段值有name和duration),是否重复和minDuratin,maxDuration,totalNum由服务器处理
       {
         name: { type: String }, //resource的文件url
         minDuration: { type: Number }, //resource的耗时的最大值和最小值（用于多次请求）
