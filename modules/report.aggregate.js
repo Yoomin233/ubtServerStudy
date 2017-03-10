@@ -1,11 +1,35 @@
 var db = require('../db/model.js');
+var UBTAggregate = require('./aggregate.js');
 
 exports.aggregate =function(req,res){
+  	var params=require('url').parse(decodeURIComponent(req.url),true).query;
+  	var script = JSON.parse(params.script);
+  	console.log(script)
+  	var aggregation = new UBTAggregate(db.CounterModel);
+
+	for(var attr in script){
+	  var val = script[attr];
+	  console.log(attr);
+	  aggregation[attr](val);
+	}
+
+    aggregation.exec(function (err,result){
+        if (err) {
+        	console.log(err);
+        	return res.sendStatus(500);
+        }
+        console.log(result);
+        res.json(result);
+    });
+}
+
+/*
+
+backup:
 	var initParams={
 		"period":"day",
 		"type":"ERROR"
 	};
-  var params=require('url').parse(decodeURIComponent(req.url),true).query;
   var aggParams=Object.assign({},initParams,params);
 
 	var queryStart=new Date();
@@ -35,35 +59,18 @@ exports.aggregate =function(req,res){
 			}
 	}
 	aggParams._queryStart=queryStart;
-
-    db.CounterModel.aggregate([
-		    {		
-			    $project: { 
+		aggregation["project"]({ 
 			        "total_nums":1,
 			        "type":1,
 			        "timestamp_minute": { $add: [ "$timestamp_minute", 8*60*60000 ] }
-			    }
-		    },
-            { 
-                $match: {
+			    })
+	    .match({
                     "type":aggParams.type,
                     "timestamp_minute": {$gte: aggParams._queryStart}
-                } 
-            },
-            { 
-                $group : {
+                })
+	    .group({
                     _id: aggParams._groupID,
                     count: { $sum: '$total_nums' }
-                }
-            },
-            { $sort: { _id: 1 } }
-        ],
-        function (err,result){
-            if (err) {
-            	console.log(err);
-            	return res.sendStatus(500);
-            }
-            res.json(result);
-        }
-    );   
-}
+                })
+	    .sort({ _id: 1 });
+*/
