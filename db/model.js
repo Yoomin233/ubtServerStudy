@@ -55,6 +55,7 @@ var PVSchema = new Schema({
 		clickLog:[],  //click元素
 		inputInfo:[], //页面input, select元素的值（onblur, onchange event）
 		unloadTime: { type: Date},
+		pvState:{ type: String, default: ''},
 		custom: { type: Schema.Types.Mixed}
 	}
 });
