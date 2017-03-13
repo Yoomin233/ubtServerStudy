@@ -45,7 +45,7 @@ app.get("/healthcheck", function(req,res){
 app.post("/report", reportaggregate.aggregate);
 app.get("/config/q/:configKey", configAPI.q);
 app.post("/config/update", configAPI.update);
-app.get('/error', trace.traceError);
+app.get('/ubt/trace.gif', trace.traceError);
 app.get("/ubt/pv.gif", pv.save);
 
 var port = process.env.NODE_PORT || 8080;
