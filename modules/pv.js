@@ -56,7 +56,6 @@ exports.save = function(req, res) {
           _dynamic.preformance=Object.assign({},pvDoc.dynamic.performance,pvData.dynamic.performance);
           _dynamic.custom=Object.assign({},pvDoc.dynamic.custom,pvData.dynamic.custom);
           _dynamic.unloadTime=pvDoc.dynamic.unloadTime;
-          console.log(pvDoc.dynamic.unloadTime)
           var _clickLog=pvData.dynamic.clickLog||[];
           var _inputInfo=pvData.dynamic.inputInfo||[];
           _dynamic.clickLog=pvDoc.dynamic.clickLog.concat(_clickLog);
