@@ -42,7 +42,7 @@ app.all('*',function (req, res, next) {
 app.get("/healthcheck", function(req,res){
   res.sendStatus(200);
 });
-app.get("/report", reportaggregate.aggregate);
+app.post("/report", reportaggregate.aggregate);
 app.get("/config/q/:configKey", configAPI.q);
 app.post("/config/update", configAPI.update);
 app.get('/error', trace.traceError);

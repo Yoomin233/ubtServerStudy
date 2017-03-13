@@ -70,7 +70,7 @@ var CounterSchema = new Schema({
   type: ['ERROR','PV'],// 计数类型
   values:[]// 样本值
 });
-var CounterModel = mongoose.model('CounterReport', CounterSchema);
+var CounterModel = mongoose.model('Counter', CounterSchema);
 
 exports.CounterModel = CounterModel;
 exports.ConfigModel = ConfigModel;
