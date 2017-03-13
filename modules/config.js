@@ -10,6 +10,23 @@ function _callback(res){
 	}
 }
 
+function _q(key,cb){
+	db.ConfigModel.findOne({"key":key},cb);
+}
+
+function _update(key,value,cb){
+	var _key=key;
+	var _value=value;
+	db.ConfigModel.update(
+	  { 
+	    "key": _key
+	  }, 
+	  _value, 
+	  {safe: true, upsert: true},
+	  cb
+  	);	
+}
+
 exports.update = function(req, res) {
 	var doc = req.body||'';
 	if (doc == '') {
@@ -19,14 +36,7 @@ exports.update = function(req, res) {
 	var key = req.body.key || '';
 
 	if (key != '') {
-		db.ConfigModel.update(
-		  { 
-		    "key": key
-		  }, 
-		  doc, 
-		  {safe: true, upsert: true},
-		  _callback(res)
-	  	);
+		return _update(key,doc,_callback(res));
 	}else{
 		return res.sendStatus(400);
 	}
@@ -36,8 +46,11 @@ exports.q = function(req, res) {
     var key = req.params.configKey || '';
 
 	if (key != '') {
-		db.ConfigModel.findOne({"key":key},_callback(res));
+		return _q(key,_callback(res));
 	}else{
 		return res.sendStatus(400);
 	}
 }
+
+exports._q = _q;
+exports._update = _update;

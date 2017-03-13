@@ -14,6 +14,7 @@ var reportaggregate = require('./modules/report.aggregate.js');
 var configAPI = require('./modules/config.js');
 var trace = require('./modules/trace.js');
 var pv = require('./modules/pv.js');
+var schedule = require('./modules/schedule.js');
 
 db.init();
 const app = express();
@@ -52,3 +53,5 @@ var port = process.env.NODE_PORT || 8080;
 app.listen(port, function() {
 	console.log("Listening on " + port);
 });
+
+schedule.startSchedule();

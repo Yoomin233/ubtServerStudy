@@ -1,9 +1,104 @@
 var schedule = require('node-schedule');
+var db = require('../db/model.js');
+var configAPI = require('./config.js');
+var UBTAggregate = require('./aggregate.js');
 
-var rule = new schedule.RecurrenceRule();
-rule.second = 1;
-//rule.hour = 2;
+function _aggByScript(script,cb){
+  var aggregation = new UBTAggregate(db[script.collection]);
+  var _pipeline=script.pipeline;
+	for(var attr in _pipeline){
+	  var val = _pipeline[attr];
+	  aggregation[attr](val);
+	}
+  aggregation.exec(cb);
+}
 
-var j = schedule.scheduleJob(rule, function(){
-  console.log('The answer to life, the universe, and everything!'+new Date());
-});
+function pv(){
+	configAPI._q("all-pvids",function(err,doc){
+		console.log("["+new Date()+"]do task [pv]");
+		if (err) {
+		  console.log(err);
+		  return;
+		}
+		let pvids=doc.value;
+		for(let i=0;i<pvids.length;i++){
+			let _pvid=pvids[i];
+			//let _pvid="h5-DX-1.0.0-/index.html-#TEST2-UBT - demo-";
+			var d=new Date();
+			var dStartTime=new Date(d.getFullYear(), d.getMonth(), d.getDate(), d.getHours(), d.getMinutes(), 0);
+			dStartTime.setMinutes(dStartTime.getMinutes()-2);
+
+			var dEndTime=new Date(d.getFullYear(), d.getMonth(), d.getDate(), d.getHours(), d.getMinutes(), 0);
+			dEndTime.setMinutes(dEndTime.getMinutes()-1);
+
+			var _pipeline={
+				project:{
+		        	"static":1,
+		        	"visitTime": "$static.visitTime"
+				},
+				match:{
+					"static.pvId":_pvid,
+					"visitTime":{"$gte":dStartTime,"$lt":dEndTime}
+				},
+				group:{
+					_id:{
+						minutes: { $minute: "$visitTime" },
+						hour: { $hour: "$visitTime" },
+			            day: { $dayOfMonth: "$visitTime" }, 
+			            month: { $month: "$visitTime" },  
+			            year: { $year: "$visitTime" } 
+					},
+					count: { $sum: 1 }
+				},
+				sort:{
+					_id: -1
+				}
+			};
+
+			var aggregation = new UBTAggregate(db.PVModel);
+			for(var attr in _pipeline){
+			  var val = _pipeline[attr];
+			  aggregation[attr](val);
+			}
+			aggregation.exec(function(err,result){
+			    if (err) {
+			    	console.log(err);
+			    	return ;
+			    }
+			    console.log("result:"+_pvid);
+			    console.log(result);
+			});
+		}	
+	})
+
+}
+
+function allpvids(){
+	console.log("["+new Date()+"]do task [allpvids]");
+	db.PVModel.distinct("static.pvId",{"static.pvId":{"$ne":""}},function(err,pvids){
+	    if (err) {
+	    	console.log(err);
+	    	return;
+	    }
+	    configAPI._update("all-pvids",{value:pvids},function(err, doc){
+			if (err) {
+			  console.log(err);
+			  return;
+			}
+			console.log(doc);
+	    });
+	});	
+}
+
+exports.startSchedule=function(){
+	schedule.scheduleJob('* 1 * * * *', function(){
+	  allpvids();
+	});	
+
+	schedule.scheduleJob('1 * * * * *', function(){
+	  pv();
+	});	
+}
+
+
+
