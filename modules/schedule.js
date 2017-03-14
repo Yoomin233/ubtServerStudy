@@ -16,6 +16,7 @@ function _aggByScript(script,cb){
 function pv(){
 	configAPI._q("all-pvids",function(err,doc){
 		console.log("["+new Date()+"]do task [pv]");
+
 		if (err) {
 		  console.log(err);
 		  return;
@@ -25,11 +26,10 @@ function pv(){
 			let _pvid=pvids[i];
 			//let _pvid="h5-DX-1.0.0-/index.html-#TEST2-UBT - demo-";
 			var d=new Date();
-			var dStartTime=new Date(d.getFullYear(), d.getMonth(), d.getDate(), d.getHours(), d.getMinutes(), 0);
-			dStartTime.setMinutes(dStartTime.getMinutes()-2);
+			var dStartTime=new Date(d.getFullYear(), d.getMonth(), d.getDate(), d.getHours(), 0, 0);
+			dStartTime.setHours(dStartTime.getHours()-1);
 
-			var dEndTime=new Date(d.getFullYear(), d.getMonth(), d.getDate(), d.getHours(), d.getMinutes(), 0);
-			dEndTime.setMinutes(dEndTime.getMinutes()-1);
+			var dEndTime=new Date(d.getFullYear(), d.getMonth(), d.getDate(), d.getHours(), 0, 0);
 
 			var _pipeline={
 				project:{
@@ -95,7 +95,7 @@ exports.startSchedule=function(){
 	  allpvids();
 	});	
 
-	schedule.scheduleJob('1 * * * * *', function(){
+	schedule.scheduleJob('* 1 * * * *', function(){
 	  pv();
 	});	
 }

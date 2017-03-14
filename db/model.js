@@ -29,8 +29,9 @@ var PVSchema = new Schema({
     state:['PENDING','FINISH','TIMEOUT']
   },
   static: {
-    pvId:{ type: String, default: ''},//格式：platform-appName-appVersion-window.location.pathname-title-custom
+    pvId:{ type: String, default: ''},//格式：platform-appName-appVersion-pathname-hash-title-custom
     uid:{ type: String, default: ''},
+    channelId:{ type: String, default: ''},//渠道号
     prePV:{
       pvId:{ type: String, default: ''}
     },
