@@ -67,8 +67,25 @@ function pv(){
 			    	console.log(err);
 			    	return ;
 			    }
-			    console.log("result:"+_pvid);
-			    console.log(result);
+			    if (result.length>0) {
+					db.ReportResultModel.update(
+					  { 
+					    pvid: _pvid,
+					    startTime: dStartTime,
+					    dEndTime: dEndTime
+					  }, 
+					  {
+					    report:result
+					  }, 
+					  {safe: true, upsert: true},
+					  function(_err, doc){
+					    if (_err) {
+					      console.log(_err);
+					    }
+					    console.log(doc);
+				  	  }
+				  	);
+			    }
 			});
 		}	
 	})
@@ -93,13 +110,13 @@ function allpvids(){
 }
 
 exports.startSchedule=function(){
-	schedule.scheduleJob('* 1 * * * *', function(){
+	schedule.scheduleJob('* 5 * * * *', function(){
 	  allpvids();
 	});	
 
-	schedule.scheduleJob('* 1 * * * *', function(){
+	//schedule.scheduleJob('* 1 * * * *', function(){
 	  pv();
-	});	
+	//});	
 }
 
 

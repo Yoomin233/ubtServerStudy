@@ -95,6 +95,11 @@ var CounterSchema = new Schema({
 });
 var CounterModel = mongoose.model('Counter', CounterSchema);
 
+var ReportResultSchema = new Schema({ 
+  report: { type: Schema.Types.Mixed,default:{}}
+});
+var ReportResultModel = mongoose.model('ReportResult', ReportResultSchema);
+
 var UserSchema = new Schema({
     username: { type: String, required: true, unique: true },
     password: { type: String, required: true },
@@ -129,3 +134,5 @@ exports.ConfigModel = ConfigModel;
 exports.TraceModel = TraceModel;
 exports.PVModel = PVModel;
 exports.UserModel = UserModel;
+exports.ReportResultModel = ReportResultModel;
+
