@@ -1,3 +1,5 @@
+"use strict";
+
 var schedule = require('node-schedule');
 var db = require('../db/model.js');
 var configAPI = require('./config.js');
