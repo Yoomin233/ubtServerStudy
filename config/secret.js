@@ -1,0 +1,1 @@
+exports.secretToken = process.env.JWT_SECRET || 'aMdoeb5ed87zorRdkD6greDML81DcnrzeSD648ferFejmplx';

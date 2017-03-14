@@ -1,6 +1,8 @@
 var mongoose = require('mongoose');
 var timestamps   = require('mongoose-timestamp');
 var Schema = mongoose.Schema;
+var bcrypt = require('bcrypt');
+var SALT_WORK_FACTOR = 10;
 
 var ConfigSchema = new Schema({ 
   key: { type: String, required: true},
@@ -93,7 +95,37 @@ var CounterSchema = new Schema({
 });
 var CounterModel = mongoose.model('Counter', CounterSchema);
 
+var UserSchema = new Schema({
+    username: { type: String, required: true, unique: true },
+    password: { type: String, required: true },
+    role:{ type: Number, default: 2 } // 1:all, 2: query
+});
+UserSchema.plugin(timestamps);
+UserSchema.pre('save', function(next) {
+  var user = this;
+
+  if (!user.isModified('password')) return next();
+
+  bcrypt.genSalt(SALT_WORK_FACTOR, function(err, salt) {
+    if (err) return next(err);
+
+    bcrypt.hash(user.password, salt, function(err, hash) {
+        if (err) return next(err);
+        user.password = hash;
+        next();
+    });
+  });
+});
+UserSchema.methods.comparePassword = function(password, cb) {
+    bcrypt.compare(password, this.password, function(err, isMatch) {
+        if (err) return cb(err);
+        cb(isMatch);
+    });
+};
+var UserModel = mongoose.model('User', UserSchema);
+
 exports.CounterModel = CounterModel;
 exports.ConfigModel = ConfigModel;
 exports.TraceModel = TraceModel;
 exports.PVModel = PVModel;
+exports.UserModel = UserModel;
