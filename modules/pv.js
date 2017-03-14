@@ -53,13 +53,15 @@ exports.save = function(req, res) {
           }
 
           var _dynamic={};
-          _dynamic.preformance=Object.assign({},pvDoc.dynamic.performance,pvData.dynamic.performance);
+          _dynamic.performanceTiming=Object.assign({},pvDoc.dynamic.performanceTiming,pvData.dynamic.performanceTiming);
           _dynamic.custom=Object.assign({},pvDoc.dynamic.custom,pvData.dynamic.custom);
           _dynamic.unloadTime=pvDoc.dynamic.unloadTime;
           var _clickLog=pvData.dynamic.clickLog||[];
           var _inputInfo=pvData.dynamic.inputInfo||[];
+          var _performanceEntries=pvData.dynamic.performanceEntries||[];
           _dynamic.clickLog=pvDoc.dynamic.clickLog.concat(_clickLog);
           _dynamic.inputInfo=pvDoc.dynamic.inputInfo.concat(_inputInfo);
+          _dynamic.performanceEntries=pvDoc.dynamic.inputInfo.concat(_performanceEntries);
 
           var _meta=pvDoc.meta;
 
