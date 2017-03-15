@@ -5,3 +5,4 @@ logs/
 sslcert/
 stur.mk
 coverage/
+ubt.log
