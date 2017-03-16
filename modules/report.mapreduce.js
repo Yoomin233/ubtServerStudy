@@ -1,32 +1,30 @@
-var db = require('../db/pv.model.js');
+var db = require('../db/model.js');
 
 function taskPVUnique(p,q,uniqueField){
 	var o = {}; 
-	o.scope={p:p,field:uniqueField};
-
+	o.scope={p:p};
 	o.map = function() { 
 		var d = new Date(this.static.visitTime);
 
 		var k=d.getFullYear();
 		var m=d.getMonth()+1;
-		if (p==1) {
-			k=k+'-'+m;
-		}else if (p==2) {
+		if (p=="week") {
 			k=k+'-'+m+'-'+d.getDate();
-		}else if (p==3) {
+		}else if (p=="day") {
 			k=k+'-'+m+'-'+d.getDate()+'-'+d.getHours();
+		}else if (p=="hour") {
+			k=k+'-'+m+'-'+d.getDate()+'-'+d.getHours()+'-'+d.getMinutes();
 		}
 
 		var _uv="";
-		if (this.uid!="") {
-			_uv=this.uid;
-		}else if (this.deviceid!="") {
-			_uv=this.deviceid;
+		if (this.static.uid!="") {
+			_uv=this.static.uid;
+		}else if (this.static.deviceid!="") {
+			_uv=this.static.deviceid;
 		}
 
 		emit({time:k},{pv:1,uv:_uv});
 	}    
-
 	o.reduce = function(key, values) {
 		var uniqueList=[];
         for (var i = values.length - 1; i >= 0; i--) {
@@ -53,12 +51,11 @@ function taskPVUnique(p,q,uniqueField){
 		});
 	    return {pv:countP,uv:countU};
 	}
-
 	o.query  = q;  
-
 	return o;
 }
 
+exports.taskPVUnique=taskPVUnique;
 exports.mr = function(req, res){
 	var period = req.query.period || 2;
 	var taskid = req.query.taskid || 1;
@@ -68,7 +65,7 @@ exports.mr = function(req, res){
 
 	var o = {};
 
-	db.pvModel.count(queryParams, function(err, c) {
+	db.PVModel.count(queryParams, function(err, c) {
         if(err) res.sendStatus(500);
 	    	
 		if (c>500000) {
@@ -76,7 +73,7 @@ exports.mr = function(req, res){
 		}else{
 			o = taskPVUnique(period,queryParams,field);
 			
-			db.pvModel.mapReduce(o,function (err, data, stats) { 
+			db.PVModel.mapReduce(o,function (err, data, stats) { 
 				if(err) res.sendStatus(500);
 			    return res.json({processtime:stats.processtime,results:data});
 			});

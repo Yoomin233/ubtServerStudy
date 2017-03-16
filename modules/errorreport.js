@@ -1,4 +1,5 @@
-var db = require('../db/model.js');
+var db 	= require('../db/model.js');
+var log = require('./log.js')();
 
 exports.increaseErrorSample = function(){
 	var d=new Date();
@@ -15,9 +16,9 @@ exports.increaseErrorSample = function(){
 	  {safe: true, upsert: true},
 	  function(err, doc){
 	    if (err) {
-	      console.log(err);
+	      log.error(err);
 	    }
-	    console.log(doc);
+	    log.info(doc);
   	  }
   	);
 }

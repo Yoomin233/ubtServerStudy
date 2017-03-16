@@ -1,0 +1,5 @@
+db.getCollection('pvs').find({"static.appName":"DX","static.title":{$regex:"UBT"}})
+db.getCollection('pvs').find({"static.appName":"UBT-Portal"})
+db.getCollection('pvs').distinct("static.deviceId",{"static.appName":"UBT-Portal"})
+db.getCollection('reportresults').find({"reportName":"mapreduce","static.appName":"UBT-Portal"})
+db.getCollection('reportresults').find({})
