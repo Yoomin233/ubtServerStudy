@@ -54,17 +54,19 @@ PipeLineBuilder.prototype.weekGroupID=function(){
 /*
   period:hour,day,week
 */
-PipeLineBuilder.prototype.pv = function(period,fieldName,fieldValue) {
+PipeLineBuilder.prototype.time = function(period,fieldName,fieldValue) {
   var range=this[period]();
   var period_id=period+"GroupID";
   var groupID=this[period_id]();
 
   var _pipeline={
     project:{
-          "static":1,
-          "visitTime": "$static.visitTime"
+      "meta":1,
+      "static":1,
+      "visitTime": "$static.visitTime"
     },
     match:{
+      "meta.state":"FINISH",
       "visitTime":{"$gte":range.startTime,"$lt":range.endTime}
     },
     group:{
@@ -76,6 +78,34 @@ PipeLineBuilder.prototype.pv = function(period,fieldName,fieldValue) {
     }
   };
   _pipeline.match[fieldName]=fieldValue;
+
+  return _pipeline;
+};
+
+PipeLineBuilder.prototype.groupID = function(fieldName,appName) {
+  var dStartTime=new Date();
+  dStartTime.setDate(dStartTime.getDate()-30);
+  var _fieldName='$'+fieldName;
+
+  var _pipeline={
+    project:{
+      "meta":1,
+      "static":1,
+      "visitTime": "$static.visitTime"
+    },
+    match:{
+      "meta.state":"FINISH",
+      "visitTime":{"$gte":dStartTime}
+    },
+    group:{
+      _id:_fieldName,
+      count: { $sum: 1 }
+    },
+    sort:{
+      _id: -1
+    }
+  };
+  _pipeline.match["static.appName"]=appName;
 
   return _pipeline;
 };

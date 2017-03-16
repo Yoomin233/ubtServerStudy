@@ -1,4 +1,5 @@
-var db = require('../db/model.js');
+var db    = require('../db/model.js');
+var log   = require('./log.js')();
 
 function _pvValidate(pv){
   if (!pv.dynamic || !pv.static) {
@@ -10,6 +11,23 @@ function _pvValidate(pv){
   }
 
   return true;
+}
+
+exports.pvTimeout=function(){
+  var endTime=new Date();
+  endTime.setDate(endTime.getDate()-1);
+
+  db.PVModel.update({
+    "meta.state":{$exists:true,$ne:"FINISH"},
+    "static.visitTime":{$exists:true,"$lt":endTime}
+  }, {
+    "meta.state":"FINISH"
+  }, {multi: true}, function(err, doc){
+    if (err) {
+      log.error(err);
+    } 
+    log.info(doc);
+  });  
 }
 
 exports.save = function(req, res) {

@@ -1,5 +1,8 @@
 var db = require('../db/model.js');
 
+/*
+	PV,UV
+*/
 function taskPVUnique(p,q,uniqueField){
 	var o = {}; 
 	o.scope={p:p};
@@ -55,7 +58,48 @@ function taskPVUnique(p,q,uniqueField){
 	return o;
 }
 
+/*
+	来源
+*/
+function taskPrePV(p,q){
+	var o = {}; 
+	o.scope={p:p};
+	o.map = function() { 
+		var d = new Date(this.static.visitTime);
+
+		var k=d.getFullYear();
+		var m=d.getMonth()+1;
+		if (p=="week") {
+			k=k+'-'+m+'-'+d.getDate();
+		}else if (p=="day") {
+			k=k+'-'+m+'-'+d.getDate()+'-'+d.getHours();
+		}else if (p=="hour") {
+			k=k+'-'+m+'-'+d.getDate()+'-'+d.getHours()+'-'+d.getMinutes();
+		}
+
+		var _prePvID="";
+		if (this.static.prePV.pvId!="") {
+			_prePvID=this.static.prePV.pvId;
+		}else if (this.static.referrer!="") {
+			_prePvID=this.static.referrer;
+		}else if(this.static.channelId!=""){
+			_prePvID=this.static.channelId;
+		}else{
+			_prePvID="DirectAccess";
+		}
+
+		emit({time:k,prePV:_prePvID},1);
+	}    
+	o.reduce = function(key, values) {
+	    return Array.sum(values);
+	}
+	o.query  = q;  
+	return o;
+}
+
 exports.taskPVUnique=taskPVUnique;
+exports.taskPrePV=taskPrePV;
+
 exports.mr = function(req, res){
 	var period = req.query.period || 2;
 	var taskid = req.query.taskid || 1;
