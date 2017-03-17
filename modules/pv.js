@@ -46,6 +46,19 @@ function _merge(oldObj,newObj){
   return obj;
 }
 
+function decodeBusiness(obj){
+  let newBusiness={};
+  for (let key in obj) {
+    if (obj[key].substring(0, 2) == "e_") {
+      let v=new Buffer(obj[key].substring(2), 'base64').toString()
+      newBusiness[key]=v;
+    }else{
+      newBusiness[key]=obj[key];
+    }
+  }
+  return newBusiness;
+}
+
 exports.save = function(req, res) {
   try {
     var queryStr=require('url').parse(req.url).query || '';
@@ -66,6 +79,9 @@ exports.save = function(req, res) {
       }
 
       if (!pvDoc) { // Insert new doc
+
+        pvData.business=decodeBusiness(pvData.business);
+
         var pv = new db.PVModel(pvData);
         if (pvData.dynamic.pvState=="FINISH") {
           pvData.meta.state="FINISH";
@@ -87,6 +103,7 @@ exports.save = function(req, res) {
           }
 
           var _dynamic=_merge(pvDoc.dynamic,pvData.dynamic);
+          pvData.business=decodeBusiness(pvData.business);
           var _business=_merge(pvDoc.business,pvData.business);
           var _meta=pvDoc.meta;
 

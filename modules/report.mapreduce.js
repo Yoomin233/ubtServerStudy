@@ -81,7 +81,7 @@ function taskPrePV(p,q){
 		if (this.static.prePV.pvId!="") {
 			_prePvID=this.static.prePV.pvId;
 		}else if (this.static.referrer!="") {
-			_prePvID=this.static.referrer;
+			_prePvID=this.static.referrer.split('?')[0];
 		}else if(this.static.channelId!=""){
 			_prePvID=this.static.channelId;
 		}else{

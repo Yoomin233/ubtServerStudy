@@ -60,3 +60,5 @@ app.listen(port, function() {
 	log.info("Listening on " + port);
 });
 schedule.startSchedule();
+
+//console.log(new Buffer("YWFh", 'base64').toString());
