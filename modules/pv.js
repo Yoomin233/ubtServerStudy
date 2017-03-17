@@ -1,5 +1,8 @@
+"use strict";
+
 var db    = require('../db/model.js');
 var log   = require('./log.js')();
+var _     = require('lodash');
 
 function _pvValidate(pv){
   if (!pv.dynamic || !pv.static) {
@@ -30,6 +33,19 @@ exports.pvTimeout=function(){
   });  
 }
 
+function _merge(oldObj,newObj){
+  let obj=_.cloneDeep(oldObj);
+  for (let key in newObj) {
+    if (_.isArray(newObj[key])) {
+      obj[key]=obj[key].concat(newObj[key]);
+    }
+    if (_.isObject(newObj[key])) {
+      obj[key]=Object.assign({},obj[key],newObj[key]);
+    }
+  }
+  return obj;
+}
+
 exports.save = function(req, res) {
   try {
     var queryStr=require('url').parse(req.url).query || '';
@@ -45,7 +61,7 @@ exports.save = function(req, res) {
 
     db.PVModel.findOne(q, function (err, pvDoc) {
       if (err) {
-        console.log(err);
+        log.error(err);
         return res.sendStatus(401);
       }
 
@@ -60,7 +76,7 @@ exports.save = function(req, res) {
 
         pv.save(function(err) {
           if (err) {
-            console.log(err);
+            log.error(err);
             return res.sendStatus(500);
           } 
           return res.sendStatus(200);
@@ -70,17 +86,8 @@ exports.save = function(req, res) {
             return res.sendStatus(400);
           }
 
-          var _dynamic={};
-          _dynamic.performanceTiming=Object.assign({},pvDoc.dynamic.performanceTiming,pvData.dynamic.performanceTiming);
-          _dynamic.custom=Object.assign({},pvDoc.dynamic.custom,pvData.dynamic.custom);
-          _dynamic.unloadTime=pvDoc.dynamic.unloadTime;
-          var _clickLog=pvData.dynamic.clickLog||[];
-          var _inputInfo=pvData.dynamic.inputInfo||[];
-          var _performanceEntries=pvData.dynamic.performanceEntries||[];
-          _dynamic.clickLog=pvDoc.dynamic.clickLog.concat(_clickLog);
-          _dynamic.inputInfo=pvDoc.dynamic.inputInfo.concat(_inputInfo);
-          _dynamic.performanceEntries=pvDoc.dynamic.inputInfo.concat(_performanceEntries);
-
+          var _dynamic=_merge(pvDoc.dynamic,pvData.dynamic);
+          var _business=_merge(pvDoc.business,pvData.business);
           var _meta=pvDoc.meta;
 
           if (pvData.dynamic.pvState=="FINISH") {
@@ -92,10 +99,11 @@ exports.save = function(req, res) {
 
           db.PVModel.update(q, {
             dynamic:_dynamic,
+            business:_business,
             meta:_meta
           }, {safe: true}, function(err, doc){
             if (err) {
-              console.log(err);
+              log.error(err);
               return res.sendStatus(500);
             } 
             return res.sendStatus(200);
@@ -103,7 +111,7 @@ exports.save = function(req, res) {
       }
     });
   } catch (e) {
-    console.log(e)
+    log.error(e)
     return res.sendStatus(500);
   }
 }

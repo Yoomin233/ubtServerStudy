@@ -1,5 +1,6 @@
-var db = require('../db/model.js');
+var db          = require('../db/model.js');
 var errorreport = require('./errorreport')
+var log         = require('./log.js')();
 
 exports.traceLog = function(req, res) {
   if (!req.query.data) {
@@ -15,7 +16,7 @@ exports.traceLog = function(req, res) {
   var docum = new db.TraceModel(errorInfo);
   docum.save((err,doc) => {
     if (err) {
-      console.log(err);
+      log.error(err);
       return res.sendStatus(500);
     }
     return res.json(doc);

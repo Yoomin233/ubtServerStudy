@@ -4,6 +4,7 @@ const methodOverride = require('method-override');
 const restify        = require('express-restify-mongoose');
 const mongoose       = require('mongoose');
 const jwt            = require('express-jwt');
+var morgan           = require('morgan')
 var config           = require('./config/index.js');
 var db               = require('./db/mongodb.js');
 var model            = require('./db/model.js');
@@ -23,6 +24,7 @@ db.init();
 const app = express();
 app.use(bodyParser.json({limit: '10mb'}));
 app.use(bodyParser.urlencoded({ extended: true,limit: '10mb', parameterLimit:50 }));
+app.use(morgan('combined'));
 app.use(methodOverride());
 if (process.env.NODE_ENV=='production') {
   app.use(jwt({secret: secret.secretToken}).unless({path: ['/ubt/trace.gif','/users/signin','/ubt/pv.gif','/users/register']}));

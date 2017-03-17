@@ -1,8 +1,9 @@
-var mongoose = require('mongoose');
-var timestamps   = require('mongoose-timestamp');
-var Schema = mongoose.Schema;
-var bcrypt = require('bcrypt');
+var mongoose      = require('mongoose');
+var timestamps    = require('mongoose-timestamp');
+var bcrypt        = require('bcrypt');
+
 var SALT_WORK_FACTOR = 10;
+var Schema = mongoose.Schema;
 
 var ConfigSchema = new Schema({ 
   key: { type: String, required: true},
@@ -15,13 +16,7 @@ var TraceSchema = new Schema({
   appName: { type: String, default: 'DX'},
   time: { type: Date, required: true},
   level: ['FATAL','ERROR','WARN','INFO','DEBUG'],
-  msg: { type: String, default: ''},
-  error: {
-    errorMessage: { type: String, default: ''},
-    scriptURI: { type: String, default: ''},
-    lineNumber: { type: Number, default: -1},
-    errorObj: { type: Schema.Types.Mixed},
-  }
+  msg: { type: String, default: ''}
 });
 var TraceModel = mongoose.model('Trace', TraceSchema);
 
@@ -32,8 +27,6 @@ var PVSchema = new Schema({
   },
   static: {
     pvId:{ type: String, default: ''},//格式：platform-appName-appVersion-pathname-hash-title-custom
-    uid:{ type: String, default: ''},
-    channelId:{ type: String, default: ''},//渠道号
     prePV:{
       pvId:{ type: String, default: ''}
     },
@@ -53,6 +46,7 @@ var PVSchema = new Schema({
     userAgent: { type: Schema.Types.Mixed},
     title:{ type: String, default: ''}
   },
+  business: { type: Schema.Types.Mixed,default:{}},
   dynamic: {
     performanceTiming: {
       readyStart: { type: Number }, //上个页面unload到浏览器开始处理当前页面fetchStart的耗时
