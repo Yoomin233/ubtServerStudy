@@ -256,12 +256,12 @@ exports.startSchedule=function(){
 		log.info("do task [allAppNames]");
 		_fieldDistinct("appName","all-apps");
 	});	
-
+/*
 	schedule.scheduleJob('1 * * * *', function(){
 		log.info("do task [statistic] hourly");
 	  	statistic("hour");
 	});	
-
+*/
 	schedule.scheduleJob('5 * * * *', function(){
 		log.info("do task [pvTimeout] hourly");
 		pv.pvTimeout();
