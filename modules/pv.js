@@ -4,6 +4,17 @@ var db    = require('../db/model.js');
 var log   = require('./log.js')();
 var _     = require('lodash');
 
+function _callback(res){
+  var _res = res;
+  return function(err, doc){
+    if (err) {
+      log.error(err);
+      return _res.sendStatus(500);
+    } 
+    return _res.sendStatus(200);
+  }
+}
+
 function _pvValidate(pv){
   if (!pv.dynamic || !pv.static) {
     return false;
@@ -82,22 +93,16 @@ exports.save = function(req, res) {
       if (!pvDoc) { // Insert new doc
 
         pvData.business=decodeBusiness(pvData.business);
-
-        var pv = new db.PVModel(pvData);
         if (pvData.dynamic.pvState=="FINISH") {
           pvData.meta.state="FINISH";
         }else{
           pvData.meta.state="PENDING";
         }
+
+        var pv = new db.PVModel(pvData);
         pv._id=docId;
 
-        pv.save(function(err) {
-          if (err) {
-            log.error(err);
-            return res.sendStatus(500);
-          } 
-          return res.sendStatus(200);
-        });
+        pv.save(_callback(res));
       }else{ // Update pv
           if (pvDoc.meta.state=="FINISH"||pvDoc.meta.state=="TIMEOUT") {
             return res.sendStatus(400);
@@ -119,13 +124,7 @@ exports.save = function(req, res) {
             dynamic:_dynamic,
             business:_business,
             meta:_meta
-          }, {safe: true}, function(err, doc){
-            if (err) {
-              log.error(err);
-              return res.sendStatus(500);
-            } 
-            return res.sendStatus(200);
-          }); 
+          }, {safe: true}, _callback(res)); 
       }
     });
   } catch (e) {
