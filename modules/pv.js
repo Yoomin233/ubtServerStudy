@@ -56,6 +56,7 @@ function decodeBusiness(obj){
       newBusiness[key]=obj[key];
     }
   }
+  console.log(newBusiness)
   return newBusiness;
 }
 
