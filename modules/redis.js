@@ -2,7 +2,8 @@ var redis = require('redis');
 var config = require('../config/index.js');
 var redisClient = redis.createClient(6379,config.redis);
 if (process.env.NODE_ENV=='production') {
-	redisClient.auth(process.env.REDIS_SECRET, function (err) { if (err) throw err; });
+	//redisClient.auth(process.env.REDIS_SECRET, function (err) { if (err) throw err; });
+	redisClient.auth("AoyUec6qwOtpVcgRi6dL", function (err) { if (err) throw err; });
 }
 var bluebird = require("bluebird");
 
