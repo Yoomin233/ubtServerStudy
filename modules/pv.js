@@ -81,7 +81,7 @@ exports.save = function(req, res) {
     if (!_pvValidate(pvData)) {
       return res.sendStatus(400);
     }
-    var docId=[pvData.static.pvId,pvData.static.visitTime,pvData.static.deviceId,pvData.static.uid].join('');
+    var docId=[pvData.static.pvId,pvData.static.visitTime,pvData.static.deviceId].join('');
     var q={_id:docId};
 
     db.PVModel.findOne(q, function (err, pvDoc) {
