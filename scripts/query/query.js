@@ -1,5 +1,5 @@
 db.getCollection('pvs').find({"static.appName":"DX","static.title":{$regex:"UBT"}})
-db.getCollection('pvs').find({"static.appName":"DemoPage111","static.visitTime":{"$gt":new Date(2017,2,20)}})
+db.getCollection('pvs').find({"static.appName":"NightWatch","static.visitTime":{"$gt":new Date(2017,2,23,14,47,10)}})
 db.getCollection('pvs').find({"static.appName":"NightWatch"})
 db.getCollection('pvs').find({"business.uid":"kkk"})
 db.getCollection('pvs').find({"meta.state":""}).count()
