@@ -16,7 +16,8 @@ var TraceSchema = new Schema({
   appName: { type: String, default: 'DX'},
   time: { type: Date, required: true},
   level: ['FATAL','ERROR','WARN','INFO','DEBUG'],
-  msg: { type: String, default: ''}
+  msg: { type: String, default: ''},
+  custom: { type: Schema.Types.Mixed,default:{}}
 });
 var TraceModel = mongoose.model('Trace', TraceSchema);
 
