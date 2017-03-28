@@ -62,13 +62,11 @@ var PVSchema = new Schema({
       totalTime: { type: Number} //loadEventEnd - fetchStart
     },
     performanceEntries: [
-      // 客户端对entry不做过滤，会把每个entry发过来(字段值有name和duration),是否重复和minDuratin,maxDuration,totalNum由服务器处理
+      // 客户端对entry不做过多过滤，会把每个entry发过来(字段值有name和duration),一分钟内重复的取duration大的
       {
         _id: false,
         name: { type: String }, //resource的文件url
-        minDuration: { type: Number }, //resource的耗时的最大值和最小值（用于多次请求）
-        maxDuration: { type: Number },
-        totalNum: { type: Number, default: 1 }, //相同的resource请求的次数
+        duration: { type: Number } //resource的耗时的最大值（用于多次请求）
       }
     ],
     clickLog:[],  //click元素
