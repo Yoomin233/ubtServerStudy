@@ -27,7 +27,7 @@ app.use(bodyParser.urlencoded({ extended: true,limit: '10mb', parameterLimit:50 
 app.use(morgan('combined'));
 app.use(methodOverride());
 if (process.env.NODE_ENV=='production') {
-  app.use(jwt({secret: secret.secretToken}).unless({path: ['/healthcheck','/ubt/trace.gif','/users/signin','/ubt/pv.gif','/users/register','/config/q/domainlist']}));
+  app.use(jwt({secret: secret.secretToken}).unless({path: ['/healthcheck','/ubt/trace.gif','/users/signin','/ubt/pv.gif','/users/register',/^\/config\/q\/.*/]}));
 }
 restify.serve(router, model.PVModel);
 restify.serve(router, model.TraceModel);
