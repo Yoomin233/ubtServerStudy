@@ -47,6 +47,10 @@ app.all('*',function (req, res, next) {
 app.get("/healthcheck", function(req,res){
   res.sendStatus(200);
 });
+app.get('/jsonp',function(req,res,next){
+  res.set('Content-Type', 'application/javascript');
+  res.jsonp({status:'jsonp'});  
+}); 
 app.post("/report", reportaggregate.aggregate);
 app.get("/config/q/:configKey", configAPI.q);
 app.post("/config/update", configAPI.update);
