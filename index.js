@@ -29,10 +29,6 @@ app.use(methodOverride());
 if (process.env.NODE_ENV=='production') {
   app.use(jwt({secret: secret.secretToken}).unless({path: ['/healthcheck','/ubt/trace.gif','/users/signin','/ubt/pv.gif','/users/register','/config/q/domainlist']}));
 }
-restify.serve(router, model.PVModel);
-restify.serve(router, model.TraceModel);
-restify.serve(router, model.ReportResultModel);
-app.use(router)
 app.all('*',function (req, res, next) {
   res.header('Access-Control-Allow-Origin', '*');
   res.header('Access-Control-Allow-Headers', 'Content-Type, Content-Length, Authorization, Accept, X-Requested-With');
@@ -44,6 +40,10 @@ app.all('*',function (req, res, next) {
     next();
   }
 });
+restify.serve(router, model.PVModel);
+restify.serve(router, model.TraceModel);
+restify.serve(router, model.ReportResultModel);
+app.use(router)
 app.get("/healthcheck", function(req,res){
   res.sendStatus(200);
 });

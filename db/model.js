@@ -31,6 +31,7 @@ var PVSchema = new Schema({
     prePV:{
       pvId:{ type: String, default: ''}
     },
+    uId:{ type: String, default: ''},
     deviceId:{ type: String, default: ''},
     client:{
       platform:['H5','ANDROID','IOS','WEICHAT','RN','HYBRID'],
@@ -92,6 +93,7 @@ var CounterModel = mongoose.model('Counter', CounterSchema);
 var ReportResultSchema = new Schema({ 
   report: { type: Schema.Types.Mixed,default:{}}
 });
+ReportResultSchema.plugin(timestamps)
 var ReportResultModel = mongoose.model('ReportResult', ReportResultSchema);
 
 var UserSchema = new Schema({

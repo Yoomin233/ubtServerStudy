@@ -20,39 +20,41 @@ function taskPVUnique(p,q,uniqueField){
 		}
 
 		var _uv="";
-		if (this.static.uid!="") {
-			_uv=this.static.uid;
-		}else if (this.static.deviceid!="") {
-			_uv=this.static.deviceid;
+		if (this.static.uId!="") {
+			_uv=this.static.uId;
+		}else if (this.static.deviceId!="") {
+			_uv=this.static.deviceId;
 		}
 
 		emit({time:k},{pv:1,uv:_uv});
 	}    
 	o.reduce = function(key, values) {
 		var uniqueList=[];
-        for (var i = values.length - 1; i >= 0; i--) {
-        	var find=0;
-        	for (var j = uniqueList.length - 1; j >= 0; j--) {
-        		if (uniqueList[j]==values[i].uv) {
-        			find=1;
-        			break;
-        		}
-        	}
-        	if (find==0) {
-        		uniqueList.push(values[i].uv);
-        	}
-        }
+    for (var i = values.length - 1; i >= 0; i--) {
+    	if (uniqueList.indexOf(values[i].uv) < 0){
+    	// var find=0;
+    	// for (var j = uniqueList.length - 1; j >= 0; j--) {
+    	// 	if (uniqueList[j]==values[i].uv) {
+    	// 		find=1;
+    	// 		break;
+    	// 	}
+    	// }
+    	// if (find==0) {
+    		uniqueList.push(values[i].uv);
+    	}
+    }
 
-       	var countP = 0;
+   	var countP = 0;
 		values.forEach(function(v) {
 		    countP += v['pv'];
 		});
 
-       	var countU = 0;
-		uniqueList.forEach(function(v) {
-		    countU += 1;
-		});
-	    return {pv:countP,uv:countU};
+    // var countU = 0;
+		// uniqueList.forEach(function(v) {
+		//     countU += 1;
+		// });
+		var countU = uniqueList.length;
+	  return {pv:countP,uv:countU};
 	}
 	o.query  = q;  
 	return o;
