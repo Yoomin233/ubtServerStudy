@@ -35,7 +35,8 @@ var PVSchema = new Schema({
     deviceId:{ type: String, default: ''},
     client:{
       platform:['H5','ANDROID','IOS','WEICHAT','RN','HYBRID'],
-      appVersion:{ type: String, default: ''}
+      appVersion:{ type: String, default: ''},
+      jsSDKVersion:{ type: String, default: ''}
     },
     appName:{ type: String, default: 'DX'},
     visitTime: { type: Date, required: true},

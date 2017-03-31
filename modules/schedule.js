@@ -91,7 +91,6 @@ function _cb_mapreduce(_pipeline,aggField,aggValue,period,reportName,cb){
 	    	cb();
 	    	return;
 	    }
-	    log.info("%s:%s",aggValue,JSON.stringify(stats));
 	    if (data.length>0) {
 	    	var q={
 	    		reportName:reportName, 

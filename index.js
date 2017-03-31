@@ -27,8 +27,9 @@ app.use(bodyParser.urlencoded({ extended: true,limit: '10mb', parameterLimit:50 
 app.use(morgan('combined'));
 app.use(methodOverride());
 if (process.env.NODE_ENV=='production') {
-  app.use(jwt({secret: secret.secretToken}).unless({path: ['/healthcheck','/ubt/trace.gif','/users/signin','/ubt/pv.gif','/users/register','/config/q/domainlist']}));
+  app.use(jwt({secret: secret.secretToken}).unless({path: ['/healthcheck','/ubt/trace.gif','/users/signin','/ubt/pv.gif','/users/register',/^\/config\/q\/.*/]}));
 }
+
 app.all('*',function (req, res, next) {
   res.header('Access-Control-Allow-Origin', '*');
   res.header('Access-Control-Allow-Headers', 'Content-Type, Content-Length, Authorization, Accept, X-Requested-With');
@@ -40,13 +41,20 @@ app.all('*',function (req, res, next) {
     next();
   }
 });
+
 restify.serve(router, model.PVModel);
 restify.serve(router, model.TraceModel);
 restify.serve(router, model.ReportResultModel);
+restify.serve(router, model.CounterModel);
+
 app.use(router)
 app.get("/healthcheck", function(req,res){
   res.sendStatus(200);
 });
+app.get('/jsonp',function(req,res,next){
+  res.set('Content-Type', 'application/javascript');
+  res.jsonp({status:'jsonp'});  
+}); 
 app.post("/report", reportaggregate.aggregate);
 app.get("/config/q/:configKey", configAPI.q);
 app.post("/config/update", configAPI.update);

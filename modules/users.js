@@ -52,6 +52,10 @@ exports.register = function(req, res) {
 	var username = req.body.username || '';
 	var password = req.body.password || '';
 	var passwordConfirmation = req.body.passwordConfirmation || '';
+	var secret = req.body.secret || '';
+	if (secret!="ubt~6666666") {
+		return res.sendStatus(401);
+	}
 
 	if (username == '' || password == '' || password != passwordConfirmation) {
 		return res.sendStatus(400);
