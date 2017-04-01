@@ -92,6 +92,8 @@ var CounterSchema = new Schema({
 var CounterModel = mongoose.model('Counter', CounterSchema);
 
 var ReportResultSchema = new Schema({ 
+  endTime : { type : Date}, 
+  startTime : { type : Date}, 
   report: { type: Schema.Types.Mixed,default:{}}
 });
 ReportResultSchema.plugin(timestamps)

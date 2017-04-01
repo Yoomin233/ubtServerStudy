@@ -39,7 +39,7 @@ function _cb_agg_time(_pipeline,aggField,aggValue,period,reportName,cb){
 	    	var q={
 	    		reportName:reportName, 
 			    startTime: _pipeline.match.visitTime["$gte"],
-			    dEndTime: _pipeline.match.visitTime["$lt"]
+			    endTime: _pipeline.match.visitTime["$lt"]
 			};
 			q[aggField]=aggValue;
 			q.period=period;
@@ -95,7 +95,7 @@ function _cb_mapreduce(_pipeline,aggField,aggValue,period,reportName,cb){
 	    	var q={
 	    		reportName:reportName, 
 			    startTime: _pipeline.match.visitTime["$gte"],
-			    dEndTime: _pipeline.match.visitTime["$lt"]
+			    endTime: _pipeline.match.visitTime["$lt"]
 			};
 			q[aggField]=aggValue;
 			q.period=period;
