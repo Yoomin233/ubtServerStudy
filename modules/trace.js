@@ -3,10 +3,11 @@ var errorreport = require('./errorreport')
 var log         = require('./log.js')();
 
 exports.traceLog = function(req, res) {
-  if (!req.query.data) {
+  var query=require('url').parse(req.url).query || '';
+  if (!query) {
     return res.send('error data is needed');
   }
-  var errorInfo = JSON.parse(req.query.data);
+  var errorInfo = JSON.parse(decodeURIComponent(query));
   // report Errors 数加1
   if (errorInfo.level=="ERROR"||errorInfo.level=="FATAL") {
     errorreport.increaseErrorSample();
