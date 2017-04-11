@@ -48,6 +48,9 @@ restify.serve(router, model.ReportResultModel);
 restify.serve(router, model.CounterModel);
 
 app.use(router)
+app.get("/a", function(req,res){
+  res.json({"a":"b"});
+});
 app.get("/healthcheck", function(req,res){
   res.sendStatus(200);
 });
