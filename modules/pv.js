@@ -24,6 +24,11 @@ function _pvValidate(pv){
     return false;
   }
 
+  if (!pv.static.pvId||!pv.static.deviceId||!pv.static.visitTime
+    ||pv.static.pvId==""||pv.static.deviceId==""||pv.static.visitTime=="") {
+    return false;
+  }
+
   return true;
 }
 

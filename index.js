@@ -68,5 +68,5 @@ app.listen(port, function() {
 	log.info("Listening on " + port);
 });
 schedule.startSchedule();
-
+exports.app=app
 //console.log(new Buffer("YWFh", 'base64').toString());
