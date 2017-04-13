@@ -13,6 +13,7 @@ var ConfigModel = mongoose.model('Config', ConfigSchema);
 
 var TraceSchema = new Schema({
   pvId: { type: String, default: ''},
+  uid: { type: Schema.Types.Mixed,default:{}},
   appName: { type: String, default: 'DX'},
   time: { type: Date, required: true},
   level: ['FATAL','ERROR','WARN','INFO','DEBUG'],
@@ -31,7 +32,6 @@ var PVSchema = new Schema({
     prePV:{
       pvId:{ type: String, default: ''}
     },
-    uId:{ type: String, default: ''},
     deviceId:{ type: String, default: ''},
     client:{
       platform:['H5','ANDROID','IOS','WEICHAT','RN','HYBRID'],
@@ -50,6 +50,7 @@ var PVSchema = new Schema({
     title:{ type: String, default: ''}
   },
   business: { type: Schema.Types.Mixed,default:{}},
+  // business.uid = {}
   dynamic: {
     performanceTiming: {
       readyStart: { type: Number }, //上个页面unload到浏览器开始处理当前页面fetchStart的耗时
@@ -77,7 +78,7 @@ var PVSchema = new Schema({
     pvState:{ type: String, required: true},
     custom: { type: Schema.Types.Mixed,default:{}}
   },
-  _id:{ type: String} //pvId+visitTime+deviceId+uid
+  _id:{ type: String} //pvId+visitTime+deviceId
 });
 PVSchema.plugin(timestamps);
 var PVModel = mongoose.model('PV', PVSchema);

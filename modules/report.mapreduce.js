@@ -20,9 +20,10 @@ function taskPVUnique(p,q,uniqueField){
 		}
 
 		var _uv="";
-		if (this.static.uId!="") {
-			_uv=this.static.uId;
-		}else if (this.static.deviceId!="") {
+		// if (this.static.uId!="") {
+		// 	_uv=this.static.uId;
+		// }else 
+		if (this.static.deviceId!="") {
 			_uv=this.static.deviceId;
 		}
 
