@@ -210,7 +210,9 @@ function statistic(period){
 function _fieldDistinct(field,persistenceKey){
 	var _field="static."+field;
 	var _persistenceKey=persistenceKey;
-	db.PVModel.distinct(_field,{_field:{"$ne":""}},function(err,result){
+	var d = new Date();
+	var queryDate  = d.setMonth(d.getMonth()-1);
+	db.PVModel.distinct(_field,{_field:{"$ne":""},"createdAt":{"$gt":queryDate}},function(err,result){
 	    if (err) {
 	    	log.error(err);
 	    	return;

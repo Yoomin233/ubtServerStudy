@@ -20,6 +20,7 @@ var TraceSchema = new Schema({
   msg: { type: String, default: ''},
   custom: { type: Schema.Types.Mixed,default:{}}
 });
+TraceSchema.plugin(timestamps);
 var TraceModel = mongoose.model('Trace', TraceSchema);
 
 var PVSchema = new Schema({
