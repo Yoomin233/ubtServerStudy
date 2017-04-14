@@ -1,6 +1,7 @@
 db.getCollection('pvs').find({"static.appName":"DX","static.title":{$regex:"UBT"}})
 db.getCollection('pvs').find({"static.appName":"NightWatch","static.visitTime":{"$gt":new Date(2017,2,23,14,47,10)}})
-db.getCollection('pvs').find({"static.appName":"NightWatch"}).count()
+db.getCollection('pvs').find({"static.appName":"rrr"}).count()
+db.getCollection('pvs').find({"_id":"--9tr0764wx6mw1vqvxe1p2e29--1491990247772--yhs4rah5jkjjn62r1jz2maemi--"})
 db.getCollection('pvs').find({"business.uid":null})
 db.getCollection('pvs').find({"meta.state":""}).count()
 db.getCollection('pvs').find({"meta.state":{$exists:true,$ne:"FINISH"},"static.visitTime":{"$lt":new Date(2017,2,15)}}).count()

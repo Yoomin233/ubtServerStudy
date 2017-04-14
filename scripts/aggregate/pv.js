@@ -8,7 +8,7 @@ db.getCollection('pvs').aggregate([
 },
 { 
     $match: {
-        "static.pvId":"h5-DX-1.0.0-/-UBT - demo-",
+        "static.title":"太极八法",
         "visitTime":{"$gte":new Date(2017,1,17),"$lt":new Date(2017,10,17)}
     } 
 },
