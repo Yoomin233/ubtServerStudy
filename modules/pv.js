@@ -38,9 +38,9 @@ exports.pvTimeout=function(){
 
   db.PVModel.update({
     "meta.state":{$exists:true,$ne:"FINISH"},
-    "static.visitTime":{$exists:true,"$lt":endTime}
+    "createdAt":{$exists:true,"$lt":endTime}
   }, {
-    "meta.state":"FINISH"
+    "meta.state":"TIMEOUT"
   }, {multi: true}, function(err, doc){
     if (err) {
       log.error(err);
@@ -122,9 +122,6 @@ exports.save = function(req, res) {
           var _meta=pvDoc.meta;
 
           if (pvData.dynamic.pvState=="FINISH") {
-            var d=new Date();
-            d.setTime(pvData.dynamic.unloadTime);
-            _dynamic.unloadTime=d;
             _meta.state="FINISH";
           }
 
