@@ -19,13 +19,26 @@ var log              = require('./modules/log.js')();
 var secret           = require('./config/secret');
 
 const router= express.Router();
+
+// import mongoose schema
 var Schema= mongoose.Schema;
-db.init();
+
+// connect to mongodb server
+db.init()
+
+
 const app = express();
-app.use(bodyParser.json({limit: '10mb'}));
-app.use(bodyParser.urlencoded({ extended: true,limit: '10mb', parameterLimit:50 }));
+
+// parse the req body as urlencoded, recursively
+// app.use(bodyParser.urlencoded({ extended: true,limit: '10mb', parameterLimit:50 }));
+
+// parse the reqbody as json and exposes the resulting object on req.body
+// app.use(bodyParser.json({limit: '10mb'}));
+
 app.use(morgan('combined'));
+
 app.use(methodOverride());
+
 if (process.env.NODE_ENV=='production') {
   app.use(jwt({secret: secret.secretToken}).unless({path: ['/healthcheck','/ubt/trace.gif','/users/signin','/ubt/pv.gif','/users/register',/^\/config\/q\/.*/]}));
 }
@@ -53,8 +66,8 @@ app.get("/healthcheck", function(req,res){
 });
 app.get('/jsonp',function(req,res,next){
   res.set('Content-Type', 'application/javascript');
-  res.jsonp({status:'jsonp'});  
-}); 
+  res.jsonp({status:'jsonp'});
+});
 app.post("/report", reportaggregate.aggregate);
 app.get("/config/q/:configKey", configAPI.q);
 app.post("/config/update", configAPI.update);

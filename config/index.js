@@ -19,4 +19,5 @@ module.exports = {
   priAli: extend(priAli, defaults),
   test: extend(test, defaults),
   production: extend(pro, defaults)
+  // process.env.NODE_ENV defaults to undefined
 }[process.env.NODE_ENV || 'test'];
