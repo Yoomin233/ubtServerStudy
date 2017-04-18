@@ -1,10 +1,17 @@
+// built-in module
+const path           = require('path');
+const fs             = require('fs');
+// third-party module
 const express        = require("express");
 const bodyParser     = require('body-parser');
 const methodOverride = require('method-override');
 const restify        = require('express-restify-mongoose');
 const mongoose       = require('mongoose');
 const jwt            = require('express-jwt');
-var morgan           = require('morgan')
+// for logger purpose
+const rfs            = require('rotating-file-stream')
+const morgan         = require('morgan')
+// custom module
 var config           = require('./config/index.js');
 var db               = require('./db/mongodb.js');
 var model            = require('./db/model.js');
@@ -18,8 +25,6 @@ var users            = require('./modules/users.js');
 var log              = require('./modules/log.js')();
 var secret           = require('./config/secret');
 
-const router= express.Router();
-
 // import mongoose schema
 var Schema= mongoose.Schema;
 
@@ -30,12 +35,24 @@ db.init()
 const app = express();
 
 // parse the req body as urlencoded, recursively
-// app.use(bodyParser.urlencoded({ extended: true,limit: '10mb', parameterLimit:50 }));
+app.use(bodyParser.urlencoded({ extended: true,limit: '10mb', parameterLimit:50 }));
 
-// parse the reqbody as json and exposes the resulting object on req.body
-// app.use(bodyParser.json({limit: '10mb'}));
+// parse the req body as json and exposes the resulting object on req.body
+app.use(bodyParser.json({limit: '10mb'}));
 
-app.use(morgan('combined'));
+
+// http req logger middleware for node.js
+  // define log directorty
+let logDirectory = path.join(__dirname, 'log')
+fs.existsSync(logDirectory) || fs.mkdirSync(logDirectory)
+  // create log stream
+let accessLogStream = rfs('access.log', {
+  interval: '1d',
+  path: logDirectory
+})
+  // use it!
+app.use(morgan('combined', {stream: accessLogStream}));
+// logger end
 
 app.use(methodOverride());
 
@@ -55,12 +72,17 @@ app.all('*',function (req, res, next) {
   }
 });
 
+// restify purpose
+const router= express.Router();
+
 restify.serve(router, model.PVModel);
 restify.serve(router, model.TraceModel);
 restify.serve(router, model.ReportResultModel);
 restify.serve(router, model.CounterModel);
 
 app.use(router)
+// restify end
+
 app.get("/healthcheck", function(req,res){
   res.sendStatus(200);
 });
@@ -71,11 +93,14 @@ app.get('/jsonp',function(req,res,next){
 app.post("/report", reportaggregate.aggregate);
 app.get("/config/q/:configKey", configAPI.q);
 app.post("/config/update", configAPI.update);
+
 app.get('/ubt/trace.gif', trace.traceLog);
 app.get("/ubt/pv.gif", pv.save);
+
 app.post("/users/signin", users.signin);
 app.get("/users/logout", users.logout);
 app.post("/users/register", users.register);
+
 var port = process.env.NODE_PORT || 8080;
 app.listen(port, function() {
 	log.info("Listening on " + port);
